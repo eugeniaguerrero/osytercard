@@ -1,15 +1,13 @@
 require 'journey_log'
 
 describe JourneyLog do
-  subject(:journey_log) {described_class.new(fake_new_journey)}
-  let(:fake_new_journey) {double(:journey_class)}
+  subject(:journey_log) {described_class.new}
+  let(:journey) {double(:journey)}
   let(:entry_station) {double(:entry_station)}
   let(:exit_station) {double(:exit_station)}
 
   describe "#initialize" do
-    it 'should initialize with one argument' do
-      expect(journey_log.journey_class).to eq fake_new_journey
-    end
+
     it 'should create an empty array' do
       expect(journey_log.journey_history).to eq []
     end
@@ -20,6 +18,19 @@ describe JourneyLog do
     end
 
     it 'should start a journey with an entry station' do
-    expect(journey_log.start(entry_station)).to eq entry_station
+      expect(journey_log.journey).to receive(:start).with(entry_station)
+      journey_log.start(entry_station)
+    end
+
+    it 'adds entry_station to journey_history' do
+      journey_log.start(entry_station)
+      expect(journey_log.journey_history).to include ({entry_station: entry_station})
+    end
+
+    describe '#end' do
+      it 'should end a journey with an exit station' do
+        expect(journey_log.journey).to receive(:end).with(exit_station)
+        journey_log.end(exit_station)
+      end
     end
 end
