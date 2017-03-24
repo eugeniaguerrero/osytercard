@@ -15,7 +15,6 @@ describe JourneyLog do
 
   describe "#start" do
     it { is_expected.to respond_to(:start).with(1).argument }
-    end
 
     it 'should start a journey with an entry station' do
       expect(journey_log.journey).to receive(:start).with(entry_station)
@@ -26,11 +25,20 @@ describe JourneyLog do
       journey_log.start(entry_station)
       expect(journey_log.journey_history).to include ({entry_station: entry_station})
     end
+  end
+
 
     describe '#end' do
+      before {journey_log.start(entry_station)}
+      
       it 'should end a journey with an exit station' do
         expect(journey_log.journey).to receive(:end).with(exit_station)
         journey_log.end(exit_station)
+      end
+
+      it 'adds exit_station to journey_history' do
+        journey_log.end(exit_station)
+        expect(journey_log.journey_history.last[:exit_station]).to eq exit_station
       end
     end
 end

@@ -16,5 +16,6 @@ class JourneyLog
 
   def end(exit_station)
     journey.end(exit_station)
+    journey_history.last[:exit_station] = exit_station
   end
 end
